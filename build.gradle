@@ -15,5 +15,9 @@ repositories {
 
 dependencies {
     implementation 'com.alibaba:fastjson:1.2.79'
+
+    // https://mvnrepository.com/artifact/org.yaml/snakeyaml
+    implementation 'org.yaml:snakeyaml:1.30'
+
 }
 

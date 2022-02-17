@@ -7,7 +7,7 @@ public final class Zeros extends JavaPlugin {
     public static final Zeros INSTANCE = new Zeros();
 
     private Zeros() {
-        super(new JvmPluginDescriptionBuilder("cn.pac.zeros.zeros", "1.0.0")
+        super(new JvmPluginDescriptionBuilder("cn.pac.zeros", "1.0.0")
                 .name("Zeros")
                 .author("McPlus, NyanCatda")
                 .build());
