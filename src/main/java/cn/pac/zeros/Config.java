@@ -26,7 +26,18 @@ public class Config {
     public class ConfigObject {
         public Group Group;
         public class Group {
-
+            public int[] Admin;// 管理员群组
+            public int[] Common;// 交流群组
+        }
+        public Server Server;
+        public class Server {
+            public String ServerPath; // BDS地址
+        }
+        public WebSocket WebSocket;
+        public class WebSocket {
+            public String Host; // 地址
+            public int Port; // 端口
+            public String Key; // Key
         }
     }
 
