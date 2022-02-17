@@ -16,5 +16,11 @@ public final class Zeros extends JavaPlugin {
     @Override
     public void onEnable() {
         getLogger().info("Plugin loaded!");
+
+        //创建一个配置文件
+        Config Config = new Config();
+        if (!Config.CreateConfig()) {
+            getLogger().info("配置文件创建失败");
+        }
     }
 }
