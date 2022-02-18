@@ -1,15 +1,26 @@
 package cn.pac.zeros.WebSocket;
 
+import cn.pac.zeros.Config;
+import cn.pac.zeros.Zeros;
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.JSONValidator;
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class MyWebSocket extends WebSocketServer {
-    public MyWebSocket() throws UnknownHostException {
-    }
+
+    /**
+     * 已验证的客户端
+     * @key String 已验证的客户端的HostAddress
+     * @key ArrayList<WebSocket> 已验证的客户端WebSocket对象列表
+     */
+    private static final HashMap<String, ArrayList<WebSocket>> VerifiedHosts = new HashMap<>();
 
     public MyWebSocket(int port) throws UnknownHostException {
         super(new InetSocketAddress(port));
@@ -48,7 +59,38 @@ public class MyWebSocket extends WebSocketServer {
      * @param message 接收到的消息
      */
     public void onMessage(WebSocket conn, String message) {
+        if (JSONValidator.from(message).validate()) {
+            WebSocketJsonObject JsonObject = JSONObject.parseObject(message, WebSocketJsonObject.class);
+            // 验证类型
+            if (JsonObject.type != null) {
+                // 验证钥匙
+                if (JsonObject.type == WebSocketJsonType.Verify) {
+                    Config.ConfigObject ConfigObject = Config.GetConfig(); // 获取配置文件
+                    String ConfigKey = ConfigObject.WebSocket.Key; // 获取配置文件钥匙
+                    // 检测钥匙相同
+                    if (JsonObject.data.equals(ConfigKey)) {
+                        // 获取客户端地址
+                        String HostAddress = conn.getRemoteSocketAddress().getAddress().getHostAddress();
+                        boolean Success = false;
+                        if (VerifiedHosts.containsKey(HostAddress)) {
+                            Success = VerifiedHosts.get(HostAddress).add(conn);
 
+                        } else {
+                            ArrayList<WebSocket> Sockets = new ArrayList<>();
+                            boolean SocketsAddSuccess = Sockets.add(conn);
+                            ArrayList<WebSocket> PutToMapSuccess = VerifiedHosts.put(HostAddress, Sockets);
+                            if (PutToMapSuccess == null) {
+                                Success = SocketsAddSuccess;
+                            }
+                        }
+
+                        if (Success) {
+                            Zeros.INSTANCE.getLogger().info(String.format("客户端验证成功！客户端地址：%s", HostAddress));
+                        }
+                    }
+                }
+            }
+        }
     }
 
     /**
