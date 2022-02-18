@@ -7,6 +7,7 @@ import org.yaml.snakeyaml.nodes.Tag;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 
 /**
  * 配置文件
@@ -15,7 +16,7 @@ import java.nio.charset.StandardCharsets;
  * @date 2022/02/17
  */
 public class Config {
-    public static File ConfigFileObject = new File("./config/cn.pac.zeros/config.yml");
+    public static File ConfigFileObject = new File("./config/cn.pac.zeros/Config.yml");
 
     /**
      * 配置对象
@@ -23,21 +24,42 @@ public class Config {
      * @author NyanCatda
      * @date 2022/02/17
      */
-    public class ConfigObject {
-        public Group Group;
-        public class Group {
-            public long[] Admin;// 管理员群组
-            public int[] Common;// 交流群组
+    public static class ConfigObject {
+        public GroupObject Group;
+        public static class GroupObject {
+            public ArrayList<Integer> Admin;// 管理员群组
+            public ArrayList<Integer> Common;// 交流群组
+
+            public GroupObject() {
+                this.Admin = new ArrayList<>();
+                this.Common = new ArrayList<>();
+            }
         }
-        public Server Server;
-        public class Server {
-            public String ServerPath; // BDS地址
+
+        public ServerObject Server;
+        public static class ServerObject {
+            public String ServerPath; // 服务器路径
+
+            public ServerObject() {
+                this.ServerPath = "";
+            }
         }
-        public WebSocket WebSocket;
-        public class WebSocket {
-            public String Host; // 地址
+
+        public WebSocketObject WebSocket;
+        public static class WebSocketObject {
             public int Port; // 端口
             public String Key; // Key
+
+            public WebSocketObject() {
+                this.Port = 8888;
+                this.Key = "";
+            }
+        }
+
+        public ConfigObject() {
+            this.Group = new GroupObject();
+            this.Server = new ServerObject();
+            this.WebSocket = new WebSocketObject();
         }
     }
 
@@ -58,12 +80,15 @@ public class Config {
      *
      * @return boolean
      */
-    public boolean CreateConfig() {
+    public static boolean CreateConfig() {
         // 判断配置文件是否存在
         if (!ConfigFileObject.exists()) {
+            File Folder = new File("./config/cn.pac.zeros");
+            if (!Folder.exists()) Folder.mkdirs();
             try {
                 //创建配置文件
                 ConfigObject Config = new ConfigObject();
+
                 Yaml yaml = new Yaml();
 
                 // 将Java对象转换为Yaml字符串
