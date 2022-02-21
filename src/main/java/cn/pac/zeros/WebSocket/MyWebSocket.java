@@ -1,7 +1,5 @@
 package cn.pac.zeros.WebSocket;
 
-import cn.pac.zeros.Config;
-import cn.pac.zeros.Zeros;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.JSONValidator;
 import org.java_websocket.WebSocket;
@@ -77,7 +75,7 @@ public class MyWebSocket extends WebSocketServer {
             WebSocketJsonObject JsonObject = JSONObject.parseObject(message, WebSocketJsonObject.class);
             // 验证类型
             if (JsonObject.type != null) {
-                JsonObject.type.handle(JsonObject.data);
+                JsonObject.type.handle(JsonObject.data, conn);
             }
         }
     }

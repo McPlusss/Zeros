@@ -4,14 +4,10 @@ import cn.pac.zeros.Config;
 import cn.pac.zeros.Zeros;
 import org.java_websocket.WebSocket;
 
-import java.util.ArrayList;
-
 public enum WebSocketJsonType { // WebSocket消息类型
     Verify { // 钥匙验证
         @Override
-        public void handle(Object... Args) {
-            String Data = (String) Args[0];
-            WebSocket Socket = (WebSocket) Args[1];
+        public void handle(String Data, WebSocket Socket) {
             // 验证钥匙
             Config.ConfigObject ConfigObject = Config.GetConfig(); // 获取配置文件
             String ConfigKey = ConfigObject.WebSocket.Key; // 获取配置文件钥匙
@@ -29,19 +25,19 @@ public enum WebSocketJsonType { // WebSocket消息类型
     },
     MessageOnLocalServer { // 通过机器人所启动的服务器消息
         @Override
-        public void handle(Object... Args) {
+        public void handle(String Data, WebSocket Socket) {
 
         }
     },
     StartLocalServer { // 启动机器人配置文件所制定的服务端
         @Override
-        public void handle(Object... Args) {
+        public void handle(String Data, WebSocket Socket) {
 
         }
     },
     StopLocalServer { // 关闭机器人配置文件所制定的服务端
         @Override
-        public void handle(Object... Args) {
+        public void handle(String Data, WebSocket Socket) {
 
         }
     },
@@ -49,29 +45,28 @@ public enum WebSocketJsonType { // WebSocket消息类型
     // 玩家事件
     onPlayerJoin { // 当玩家加入世界
         @Override
-        public void handle(Object... Args) {
+        public void handle(String Data, WebSocket Socket) {
 
         }
     },
     onPlayerLeft { // 当玩家离开游戏
         @Override
-        public void handle(Object... Args) {
+        public void handle(String Data, WebSocket Socket) {
 
         }
     },
     // 其他事件
     onConsoleOutput { // 当控制台产生命令输出
         @Override
-        public void handle(Object... Args) {
+        public void handle(String Data, WebSocket Socket) {
 
         }
     },
     onServerStart { // 当服务器启动
         @Override
-        public void handle(Object... Args) {
-
+        public void handle(String Data, WebSocket Socket) {
         }
     };
 
-    public abstract void handle(Object... Args);//定义抽象方法
+    public abstract void handle(String Data, WebSocket Socket);//定义抽象方法
 }
